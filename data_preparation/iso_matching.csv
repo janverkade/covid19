@@ -1,0 +1,290 @@
+code,ISO_country,JHU_country
+ABW,Aruba,
+AFG,Afghanistan,
+AGO,Angola,
+ALB,Albania,
+AND,Andorra,
+ARB,Arab World,
+ARE,United Arab Emirates,
+ARG,Argentina,
+ARM,Armenia,
+ASM,American Samoa,
+ATG,Antigua and Barbuda,
+AUS,Australia,
+AUT,Austria,
+AZE,Azerbaijan, Azerbaijan
+BDI,Burundi,
+BEL,Belgium,
+BEN,Benin,
+BFA,Burkina Faso,
+BGD,Bangladesh,
+BGR,Bulgaria,
+BHR,Bahrain,
+BHS,"Bahamas, The",Bahamas
+BHS,"Bahamas, The",The Bahamas
+BHS,"Bahamas, The"," Bahamas, The"
+BIH,Bosnia and Herzegovina,
+BLM,Saint Barthelemy,Saint Barthelemy
+BLR,Belarus,
+BLZ,Belize,
+BMU,Bermuda,
+BOL,Bolivia,
+BRA,Brazil,
+BRB,Barbados,
+BRN,Brunei Darussalam,Brunei
+BTN,Bhutan,
+BWA,Botswana,
+CAF,Central African Republic,
+CAN,Canada,
+CEB,Central Europe and the Baltics,
+CHE,Switzerland,
+CHI,Channel Islands,Jersey
+CHI,Channel Islands,Guernsey
+CHL,Chile,
+CHN,China,Mainland China
+CIV,Cote d'Ivoire,Ivory Coast
+CMR,Cameroon,
+COD,"Congo, Dem. Rep.",Congo (Kinshasa)
+COG,"Congo, Rep.",Congo
+COG,"Congo, Rep.",Republic of the Congo
+COG,"Congo, Rep.",Congo (Brazzaville)
+COL,Colombia,
+COM,Comoros,
+CPV,Cabo Verde,Cape Verde
+CRI,Costa Rica,
+CSS,Caribbean small states,
+CUB,Cuba,
+CUW,Curacao,
+CYM,Cayman Islands,
+CYP,Cyprus,
+CZE,Czech Republic,Czechia
+DEU,Germany,
+DJI,Djibouti,
+DMA,Dominica,
+DNK,Denmark,
+DOM,Dominican Republic,
+DZA,Algeria,
+EAP,East Asia & Pacific (excluding high income),
+EAR,Early-demographic dividend,
+EAS,East Asia & Pacific,
+ECA,Europe & Central Asia (excluding high income),
+ECS,Europe & Central Asia,
+ECU,Ecuador,
+EGY,"Egypt, Arab Rep.",Egypt
+EMU,Euro area,
+ERI,Eritrea,
+ESP,Spain,
+EST,Estonia,
+ETH,Ethiopia,
+EUU,European Union,
+FCS,Fragile and conflict affected situations,
+FIN,Finland,
+FJI,Fiji,
+FRA,France,
+FRO,Faroe Islands,
+FSM,"Micronesia, Fed. Sts.",
+GAB,Gabon,
+GBR,United Kingdom,North Ireland
+GBR,United Kingdom,UK
+GEO,Georgia,
+GHA,Ghana,
+GIB,Gibraltar,
+GIN,Guinea,
+GLP,Guadeloupe,Guadeloupe
+GMB,"Gambia, The",Gambia
+GMB,"Gambia, The",The Gambia
+GNB,Guinea-Bissau,
+GNQ,Equatorial Guinea,
+GRC,Greece,
+GRD,Grenada,
+GRL,Greenland,
+GTM,Guatemala,
+GUM,Guam,
+GUY,Guyana,French Guiana
+HIC,High income,
+HKG,"Hong Kong SAR, China",Hong Kong SAR
+HKG,"Hong Kong SAR, China",Hong Kong
+HND,Honduras,
+HPC,Heavily indebted poor countries (HIPC),
+HRV,Croatia,
+HTI,Haiti,
+HUN,Hungary,
+IBD,IBRD only,
+IBT,IDA & IBRD total,
+IDA,IDA total,
+IDB,IDA blend,
+IDN,Indonesia,
+IDX,IDA only,
+IMN,Isle of Man,
+IND,India,
+INX,Not classified,
+IRL,Ireland,Republic of Ireland
+IRN,"Iran, Islamic Rep.",Iran
+IRN,"Iran, Islamic Rep.",Iran (Islamic Republic of)
+IRQ,Iraq,
+ISL,Iceland,
+ISR,Israel,
+ITA,Italy,
+JAM,Jamaica,
+JOR,Jordan,
+JPN,Japan,
+KAZ,Kazakhstan,
+KEN,Kenya,
+KGZ,Kyrgyz Republic,Kyrgyzstan
+KHM,Cambodia,
+KIR,Kiribati,
+KNA,St. Kitts and Nevis,Saint Kitts and Nevis
+KOR,"Korea, Rep.",Republic of Korea
+KOR,"Korea, Rep.",South Korea
+KOR,"Korea, Rep.","Korea, South"
+KWT,Kuwait,
+LAC,Latin America & Caribbean (excluding high income),
+LAO,Lao PDR,Laos
+LBN,Lebanon,
+LBR,Liberia,
+LBY,Libya,
+LCA,St. Lucia,Saint Lucia
+LCN,Latin America & Caribbean,
+LDC,Least developed countries: UN classification,
+LIC,Low income,
+LIE,Liechtenstein,
+LKA,Sri Lanka,
+LMC,Lower middle income,
+LMY,Low & middle income,
+LSO,Lesotho,
+LTE,Late-demographic dividend,
+LTU,Lithuania,
+LUX,Luxembourg,
+LVA,Latvia,
+MAC,"Macao SAR, China",Macau
+MAC,"Macao SAR, China",Macao SAR
+MAF,St. Martin (French part),St. Martin
+MAF,St. Martin (French part),Saint Martin
+MAR,Morocco,
+MCO,Monaco,
+MDA,Moldova,Republic of Moldova
+MDG,Madagascar,
+MDV,Maldives,
+MEA,Middle East & North Africa,
+MEX,Mexico,
+MHL,Marshall Islands,
+MIC,Middle income,
+MKD,North Macedonia,
+MLI,Mali,
+MLT,Malta,
+MMR,Myanmar,Burma
+MNA,Middle East & North Africa (excluding high income),
+MNE,Montenegro,
+MNG,Mongolia,
+MNP,Northern Mariana Islands,
+MOZ,Mozambique,
+MRT,Mauritania,
+MTQ,Martinique,Martinique
+MUS,Mauritius,
+MWI,Malawi,
+MYS,Malaysia,
+MYT,Mayotte,Mayotte
+NAC,North America,
+NAM,Namibia,
+NCL,New Caledonia,
+NER,Niger,
+NGA,Nigeria,
+NIC,Nicaragua,
+NLD,Netherlands,
+NOR,Norway,
+NPL,Nepal,
+NRU,Nauru,
+NZL,New Zealand,
+OED,OECD members,
+OMN,Oman,
+OSS,Other small states,
+PAK,Pakistan,
+PAN,Panama,
+PER,Peru,
+PHL,Philippines,
+PLW,Palau,
+PNG,Papua New Guinea,
+POL,Poland,
+PRE,Pre-demographic dividend,
+PRI,Puerto Rico,
+PRK,"Korea, Dem. People’s Rep.",
+PRT,Portugal,
+PRY,Paraguay,
+PSE,West Bank and Gaza,Palestine
+PSE,West Bank and Gaza,occupied Palestinian territory
+PSE,West Bank and Gaza,occupied Palestinian territories
+PSS,Pacific island small states,
+PST,Post-demographic dividend,
+PYF,French Polynesia,
+QAT,Qatar,
+REU,"Reunion, La",Reunion
+ROU,Romania,
+RUS,Russian Federation,Russia
+RWA,Rwanda,
+SAS,South Asia,
+SAU,Saudi Arabia,
+SDN,Sudan,
+SEN,Senegal,
+SGP,Singapore,
+SLB,Solomon Islands,
+SLE,Sierra Leone,
+SLV,El Salvador,
+SMR,San Marino,
+SOM,Somalia,
+SRB,Serbia,
+SSA,Sub-Saharan Africa (excluding high income),
+SSD,South Sudan,
+SSF,Sub-Saharan Africa,
+SST,Small states,
+STP,Sao Tome and Principe,
+SUR,Suriname,
+SVK,Slovak Republic,Slovakia
+SVN,Slovenia,
+SWE,Sweden,
+SWZ,Eswatini,
+SXM,Sint Maarten (Dutch part),
+SYC,Seychelles,
+SYR,Syrian Arab Republic,Syria
+TCA,Turks and Caicos Islands,
+TCD,Chad,
+TEA,East Asia & Pacific (IDA & IBRD countries),
+TEC,Europe & Central Asia (IDA & IBRD countries),
+TGO,Togo,
+THA,Thailand,
+TJK,Tajikistan,
+TKM,Turkmenistan,
+TLA,Latin America & the Caribbean (IDA & IBRD countries),
+TLS,Timor-Leste,East Timor
+TMN,Middle East & North Africa (IDA & IBRD countries),
+TON,Tonga,
+TSA,South Asia (IDA & IBRD),
+TSS,Sub-Saharan Africa (IDA & IBRD countries),
+TTO,Trinidad and Tobago,
+TUN,Tunisia,
+TUR,Turkey,
+TUV,Tuvalu,
+TWN,Taiwan,Taipei and environs
+TWN,Taiwan,Taiwan*
+TZA,Tanzania,
+UGA,Uganda,
+UKR,Ukraine,
+UMC,Upper middle income,
+URY,Uruguay,
+USA,United States,US
+UZB,Uzbekistan,
+VAT,"Holy See, the",Vatican City
+VAT,"Holy See, the",Holy See
+VCT,St. Vincent and the Grenadines,Saint Vincent and the Grenadines
+VEN,"Venezuela, RB",Venezuela
+VGB,British Virgin Islands,
+VIR,Virgin Islands (U.S.),
+VNM,Vietnam,Viet Nam
+VUT,Vanuatu,
+WLD,World,
+WSM,Samoa,
+XKX,Kosovo,
+YEM,"Yemen, Rep.",
+ZAF,South Africa,
+ZMB,Zambia,
+ZWE,Zimbabwe,
+XXX,Others,Others
