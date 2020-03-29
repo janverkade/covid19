@@ -1,0 +1,12 @@
+name: COVID19_world
+title: COVID19_world
+username:
+account: janverkade
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1975382
+bundleId: 2937149
+url: https://janverkade.shinyapps.io/COVID19_world/
+when: 1585426923.53379
+asMultiple: FALSE
+asStatic: FALSE
