@@ -5,8 +5,9 @@
 # SHP file from https://thematicmapping.org/downloads/world_borders.php
 
 library(tidyverse)
-library(sf)
+library(sf) #required: lwgeom
 library(RCurl)
+library(gganimate)
 
 ##### Read file from Dropbox
 url <- "https://dl.dropboxusercontent.com/s/lpi98yc1tupj9fg/covid19_data.rds?dl=1"
@@ -40,9 +41,9 @@ my_sf_data <- subset(sf_data,variable == "Confirmed" & datatype == "cum" & count
 num_dots <- as.data.frame(my_sf_data) %>% 
   select(value) %>% mutate_all(funs(. / 100)) %>% mutate_all(random_round)
 num_dots <- round(num_dots)
-num_dots$date <- as.character(my_sf_data$date)
+#num_dots <- data.frame(value=rep(round( max(my_sf_data$value)/100 ),dim(my_sf_data)[1]) )
 
-# generates data frame with coordinates for each point + what party it is assiciated with
+# generates data frame with coordinates for each point.
 sf_dots <- map_df(names(num_dots), 
                   ~ st_sample(my_sf_data, size = num_dots[,.x], type = "random") %>%
                     st_cast("POINT") %>%
@@ -50,16 +51,24 @@ sf_dots <- map_df(names(num_dots),
                     as_tibble() %>%
                     setNames(c("lon","lat")))
 
+#sf_dots$date <- sample(as.character(my_sf_data$date),size=length(sf_dots$lon),replace=T)
+#o <- order(sf_dots$date); sf_dots$date <- sf_dots$date[o]
+tmp <- vector("numeric")
+for (i in seq_along(my_sf_data$date)) {
+  tmp <- c(tmp,rep(as.character(my_sf_data$date[i]),num_dots$value[i]))
+}
+sf_dots$date <- tmp
 
-p <- ggplot(data=sf_dots, aes(lon, lat)) +
-  #geom_sf(data = my_sf_data, fill = "transparent",colour = "white") +
-  geom_point(size=1) +
+p <- ggplot() +
+  geom_sf(data = my_sf_data, fill = "transparent",colour = "grey") +
+  geom_point(data=sf_dots, aes(lon, lat),size=1) +
   #scale_colour_manual(values = pal) +
   coord_sf(crs = 4326, datum = NA) +
   #theme_void(base_family = "Iosevka", base_size = 48) +
   labs(x = NULL, y = NULL,title=NULL,subtitle=NULL,caption=NULL)
+p
 
 anim <- p + transition_states(date) + ggtitle('Now showing {closest_state}',subtitle = 'Frame {frame} of {nframes}')
-
+save_animation(file="test.gif",animation=animate(anim,renderer = gifski_renderer()))
 
 ggsave("party_points.png", plot = p, dpi = 320, width = 80, height = 70, units = "cm")
