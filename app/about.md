@@ -41,10 +41,11 @@ In some countries, the covid19 virus spread earlier than in others. In order to 
 There is an option to set a criterium in absolute terms as well as in relative terms. The latter criterium refers to the numbers relative to a country's population size. In the threshold box, it is expressed as a fraction - not as a percentage. If you want to set a threshold at 0.01% then you should therefore input this as 0.0001.
 
 #### Credits
-This Shiny app was developed (in a private capacity) by [Jan Verkade](mailto:jan.verkade@gmail.com). 
+This Shiny app was developed (in a private capacity) by [Jan Verkade](mailto:jan.verkade@gmail.com). The code for this project is hosted at [https://github.com/janverkade/covid19](https://github.com/janverkade/covid19).
 
 **Tools used**
 * [Ubuntu](https://ubuntu.com/) and [GNU bash](https://www.gnu.org/software/bash/)
 * [R](https://www.r-project.org/), [RStudio](https://rstudio.com/) and various R libraries including ggplot2, shiny, Rcurl, dplyr, lubridate
 * [subversion](https://subversion.apache.org/)
+* [git](https://git-scm.com/)
 * [ghostwriter](https://wereturtle.github.io/ghostwriter/)
