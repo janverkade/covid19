@@ -4,7 +4,7 @@ This Shiny app allows to visualize covid19 data that originates from the Johns H
 #### Data
 The data visualized in the app originates from the [Johns Hopkins University github page](https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_daily_reports).
 
-Populatino data [originates from the World Bank](https://data.worldbank.org/indicator/SP.POP.TOTL). I used the data for 2018 - the most recent data available at the time of writing.
+Population data [originates from the World Bank](https://data.worldbank.org/indicator/SP.POP.TOTL). I used the data for 2018 - the most recent data available at the time of writing.
 
 #### Mechanics
 * JHU uploads data to the github page every day at approx 00UTC.
@@ -29,10 +29,10 @@ The data may be shown as cumulative or daily/new cases using the `Data type` dro
 
 The types of `vertical scale` include 'linear' and various log scales. The latter allow for showing a wider range of data in a compact way.
 
-**Relative data**
+**Relative numbers**
 This option allows to show country numbers relative to that country's population. Note that this is an imperfect measure, as the country may be a lot larger than the affected area and simply dividing by the population of an entire country is not a meaningful measure (e.g. think of Wuhan province in China).
 
-**Relative dates**
+**Relative date**
 In some countries, the covid19 virus spread earlier than in others. In order to compare growth rates, the app allows for visualization on a 'relative scale'. For example, one can choose to show curves for multiple countries where each curve starts when the number of confirmed cases first exceeded (or was equal to) 100. This can be done by:
 * Check the `plot using relative dates` option.
 * Set the threshold variable to 'Confirmed'

@@ -10,6 +10,7 @@ library(dplyr)
 library(lubridate)
 library(markdown)
 library(scales)
+library(leaflet)
 
 ##### Read file from Dropbox
 url <- "https://dl.dropboxusercontent.com/s/lpi98yc1tupj9fg/covid19_data.rds?dl=1"
@@ -24,56 +25,52 @@ wbpop18 <- readRDS("wb_pop18.rds")
 myTitle <- "Reported COVID19 cases, deaths and recoveries"
 
 # Define UI for application that draws a histogram
-ui <- fluidPage(
-  tags$head(includeHTML(("google-analytics.html"))),
-  
-  titlePanel(myTitle),
-  
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("myCountries","Country/Countries","",multiple=T),
-      selectInput("myVariables","Variable(s)","",multiple=T),
-      selectInput("myDataType","Data type","",multiple=F),
-      selectInput("myVerticalScale","Vertical scale","",multiple=F),
-      h3("Relative numbers"),
-      checkboxInput("useRelativeData","Plot data relative to population size",value=F),
-      h3("Relative dates"),
-      checkboxInput("useRelativeDate",HTML("Plot using relative dates, using threshold:"),value=F),
-      selectInput("myThresholdType",label=NULL,"",multiple=F),
-      selectInput("myThresholdTypeAbsRel",label=NULL,"",multiple=F),
-      numericInput("myThresholdValue",label=NULL,100,min=1)
-    ),
-    
-    mainPanel(
-      tabsetPanel(
-        tabPanel("Plot",plotOutput("coronaPlot"),
-                 fluidRow(
-                   column(4,
-                          h4("Download as PNG"),
-                          numericInput("myPNGwidth","Width (px)",2400,min=1),
-                          numericInput("myPNGheight","Height (px)",1350,min=1),
-                          numericInput("myPNGres","Resolution (ppi)",300,min=100),
-                          downloadButton("downloadPNGplot", "PNG download")
-                   ),
-                   column(4,
-                          h4("Download as PDF"),
-                          numericInput("myPDFwidth","Width (i)",8,min=1),
-                          numericInput("myPDFheight","Height (i)",4.5,min=1),
-                          downloadButton("downloadPDFplot", "PDF download")
-                   ),
-                   column(4,
-                          h4("Download data as CSV"),
-                          selectInput("data2download","Choose a dataset:",choices = c("All data","Plot data")),
-                          downloadButton("downloadCSV","CSV download")
-                   )
-                 )
-        ), #tabPanel,
-        
-        tabPanel("About", fluidRow( column(12, includeMarkdown("about.md")) ) )
-      ) #tabSetPanel
-    ) #mainPanel
-  ) #sidebarLayout
-) #fluidPage
+ui <- navbarPage("covid19 visualization tool, by Jan Verkade",
+                 tabPanel("Timeseries plots",
+                          tags$head(includeHTML(("google-analytics.html"))),
+                          sidebarLayout(
+                            sidebarPanel(
+                              selectInput("myCountries","Country/Countries","",multiple=T),
+                              selectInput("myVariables","Variable(s)","",multiple=T),
+                              selectInput("myDataType","Data type","",multiple=F),
+                              selectInput("myVerticalScale","Vertical scale","",multiple=F),
+                              h3("Relative numbers"),
+                              checkboxInput("useRelativeData","Plot data relative to population size",value=F),
+                              h3("Relative dates"),
+                              checkboxInput("useRelativeDate",HTML("Plot using relative dates, using threshold:"),value=F),
+                              selectInput("myThresholdType",label=NULL,"",multiple=F),
+                              selectInput("myThresholdTypeAbsRel",label=NULL,"",multiple=F),
+                              numericInput("myThresholdValue",label=NULL,100,min=1),
+                              sliderInput("myRelativeDatesXLims",label="Relative date axis limits:",min=-28,max=56,value=c(-14,28))
+                            ),
+                            mainPanel(plotOutput("coronaPlot"),
+                                      fluidRow(
+                                        column(4,
+                                               h4("Download as PNG"),
+                                               numericInput("myPNGwidth","Width (px)",2400,min=1),
+                                               numericInput("myPNGheight","Height (px)",1350,min=1),
+                                               numericInput("myPNGres","Resolution (ppi)",300,min=100),
+                                               downloadButton("downloadPNGplot", "PNG download")
+                                        ),
+                                        column(4,
+                                               h4("Download as PDF"),
+                                               numericInput("myPDFwidth","Width (i)",8,min=1),
+                                               numericInput("myPDFheight","Height (i)",4.5,min=1),
+                                               downloadButton("downloadPDFplot", "PDF download")
+                                        ),
+                                        column(4,
+                                               h4("Download data as CSV"),
+                                               selectInput("data2download","Choose a dataset:",choices = c("All data","Plot data","Population data")),
+                                               downloadButton("downloadCSV","CSV download")
+                                        )) #column, fluidRow
+                            ) #mainPanel
+                          ) #sidebarLayout
+                 ), #tabpanel
+                 # tabPanel("Maps",
+                 #          leafletOutput("myMap")
+                 #          ), #tabPanel
+                 tabPanel("About", fluidRow( column(12, includeMarkdown("about.md")) ) )
+) #navbarPage #shinyUI
 
 # Server logic
 server <- function(input, output, session) {
@@ -160,7 +157,7 @@ server <- function(input, output, session) {
     
     if(input$useRelativeDate) {
       m1 <- ggplot(subset(myCases,variable %in% input$myVariables),aes(x=rel_date,y=rel_value,col=country,shape=variable,linetype=variable,group=interaction(country,variable,datatype)))
-      m4 <- scale_x_continuous(breaks = seq(-1400,1400,7),minor_breaks=NULL)
+      m4 <- scale_x_continuous(breaks = seq(-1400,1400,7),minor_breaks=NULL,limits=input$myRelativeDatesXLims)
       m5 <- if(input$useRelativeData & input$myThresholdTypeAbsRel=="abs") {NULL} else {geom_hline(yintercept=input$myThresholdValue,color="grey")}
       m6 <- geom_vline(xintercept=0,color="grey")
     } else {
@@ -170,7 +167,7 @@ server <- function(input, output, session) {
       m6 <- NULL
     }
     
-    m1 + m5 + m6 + m2 + m3  + 
+    m1 + m5 + m6 + m2 + m3  +
       scale_y_continuous(trans=input$myVerticalScale,labels = myLabels) +
       xlab(NULL) + ylab(myYLab) +
       labs(caption=myCaption) +
@@ -186,10 +183,14 @@ server <- function(input, output, session) {
     print(createCoronaPlot())
   })
   
+  output$myMap <- renderLeaflet({
+    leaflet() %>% addTiles() %>%  addMarkers(lng=174.768, lat=-36.852, popup="The birthplace of R")
+  })
+  
   datasetInput <- reactive({
     myCases <- createSubset()
     myCases <- subset(myCases, select = -c(rel_value))
-    switch(input$data2download,"All data" = cases,"Plot data" = myCases)
+    switch(input$data2download,"All data" = cases,"Plot data" = myCases,"Population data" = wbpop18)
   })
   
   output$downloadPNGplot <- downloadHandler(
@@ -211,7 +212,7 @@ server <- function(input, output, session) {
   )
   
   output$downloadCSV <- downloadHandler(
-    filename = function() { 'covid19-compiled-by-janverkade.csv' },
+    filename = function() { 'covid19-data-compiled-by-janverkade.csv' },
     content = function(file) {
       write.csv(datasetInput(),file,row.names=F,quote=F)
     }
