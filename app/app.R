@@ -12,6 +12,7 @@ library(markdown)
 library(scales)
 library(sf)
 library(leaflet)
+library(shinyBS)
 
 ##### Read file from Dropbox
 url <- "https://dl.dropboxusercontent.com/s/lpi98yc1tupj9fg/covid19_data.rds?dl=1"
@@ -28,6 +29,7 @@ cases <- left_join(cases, worldmap) %>%  st_as_sf()
 myTitle <- "Reported COVID19 cases, deaths and recoveries"
 
 ui <- navbarPage("covid19 visualization tool, by Jan Verkade",
+                 tabsetPanel(id="covid19_panel",
                  tabPanel("Timeseries plots",
                           tags$head(includeHTML(("google-analytics.html"))),
                           sidebarLayout(
@@ -39,32 +41,19 @@ ui <- navbarPage("covid19 visualization tool, by Jan Verkade",
                               h3("Relative numbers"),
                               checkboxInput("useRelativeData","Plot data relative to population size",value=F),
                               h3("Relative dates"),
-                              checkboxInput("useRelativeDate",HTML("Plot using relative dates, using threshold:"),value=F),
-                              selectInput("myThresholdType",label=NULL,"",multiple=F),
-                              selectInput("myThresholdTypeAbsRel",label=NULL,"",multiple=F),
-                              numericInput("myThresholdValue",label=NULL,100,min=1),
-                              sliderInput("myRelativeDatesXLims",label="Relative date axis limits:",min=-28,max=56,value=c(-14,28))
-                            ),
-                            mainPanel(plotOutput("coronaPlot"),
-                                      fluidRow(
-                                        column(4,
-                                               h4("Download as PNG"),
-                                               numericInput("myPNGwidth","Width (px)",2400,min=1),
-                                               numericInput("myPNGheight","Height (px)",1350,min=1),
-                                               numericInput("myPNGres","Resolution (ppi)",300,min=100),
-                                               downloadButton("downloadPNGplot", "PNG download")
-                                        ),
-                                        column(4,
-                                               h4("Download as PDF"),
-                                               numericInput("myPDFwidth","Width (i)",8,min=1),
-                                               numericInput("myPDFheight","Height (i)",4.5,min=1),
-                                               downloadButton("downloadPDFplot", "PDF download")
-                                        ),
-                                        column(4,
-                                               h4("Download data as CSV"),
-                                               selectInput("data2download","Choose a dataset:",choices = c("All data","Plot data","Population data")),
-                                               downloadButton("downloadCSV","CSV download")
-                                        )) #column, fluidRow
+                              checkboxInput("useRelativeDate",HTML("Plot using relative dates"),value=F),
+                              conditionalPanel(condition="input.useRelativeDate",
+                                               h5("Relative date condition:"),
+                                               selectInput("myThresholdType",label=NULL,"",multiple=F),
+                                               selectInput("myThresholdTypeAbsRel",label=NULL,"",multiple=F),
+                                               numericInput("myThresholdValue",label=NULL,100,min=1),
+                                               sliderInput("myRelativeDatesXLims",label="Relative date axis limits:",min=-28,max=56,value=c(-7,42))
+                              ), #conditionalPanel
+                            ), #sidebarPanel
+                            mainPanel(
+                              plotOutput("coronaPlot"),
+                              p(),
+                              actionLink("link_to_tabpanel_downloads", "You can download your plot (and the underlying data) from the 'downloads' tab.")
                             ) #mainPanel
                           ) #sidebarLayout
                  ), #tabpanel
@@ -81,8 +70,30 @@ ui <- navbarPage("covid19 visualization tool, by Jan Verkade",
                             ) #mainPanel
                           ) #sidebarLayout
                  ), #tabPanel
+                 tabPanel("Downloads",
+                          fluidRow(
+                            column(4,
+                                   h4("Download as PNG"),
+                                   numericInput("myPNGwidth","Width (px)",2400,min=1),
+                                   numericInput("myPNGheight","Height (px)",1350,min=1),
+                                   numericInput("myPNGres","Resolution (ppi)",300,min=100),
+                                   downloadButton("downloadPNGplot", "PNG download")
+                            ),
+                            column(4,
+                                   h4("Download as PDF"),
+                                   numericInput("myPDFwidth","Width (i)",8,min=1),
+                                   numericInput("myPDFheight","Height (i)",4.5,min=1),
+                                   downloadButton("downloadPDFplot", "PDF download")
+                            ),
+                            column(4,
+                                   h4("Download data as CSV"),
+                                   selectInput("data2download","Choose a dataset:",choices = c("All data","Plot data","Population data")),
+                                   downloadButton("downloadCSV","CSV download")
+                            )) #column, fluidRow
+                 ), #tabPanel
+                          
                  tabPanel("About", fluidRow( column(12, includeMarkdown("about.md")) ) )
-) #navbarPage #shinyUI
+)) #tabsetPanel   #navbarPage 
 
 # Server logic
 server <- function(input, output, session) {
@@ -118,6 +129,10 @@ server <- function(input, output, session) {
     updateSelectInput(session=session,inputId="myMapDataType",label="Data type",
                       choices=myDataTypeChoices,selected=myDataTypeChoices[1])
     
+  })
+  
+  observeEvent(input$link_to_tabpanel_downloads, {
+    updateTabsetPanel(session, inputId = "covid19_panel", selected="Downloads")
   })
   
   observeEvent(input$myThresholdTypeAbsRel,{
