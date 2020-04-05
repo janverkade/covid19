@@ -13,6 +13,7 @@ library(scales)
 library(sf)
 library(leaflet)
 library(shinyBS)
+library(mapview)
 
 ##### Read file from Dropbox
 url <- "https://dl.dropboxusercontent.com/s/lpi98yc1tupj9fg/covid19_data.rds?dl=1"
@@ -30,70 +31,87 @@ myTitle <- "Reported COVID19 cases, deaths and recoveries"
 
 ui <- navbarPage("covid19 visualization tool, by Jan Verkade",
                  tabsetPanel(id="covid19_panel",
-                 tabPanel("Timeseries plots",
-                          tags$head(includeHTML(("google-analytics.html"))),
-                          sidebarLayout(
-                            sidebarPanel(
-                              selectInput("myCountries","Country/Countries","",multiple=T),
-                              selectInput("myVariables","Variable(s)","",multiple=T),
-                              selectInput("myDataType","Data type","",multiple=F),
-                              selectInput("myVerticalScale","Vertical scale","",multiple=F),
-                              h3("Relative numbers"),
-                              checkboxInput("useRelativeData","Plot data relative to population size",value=F),
-                              h3("Relative dates"),
-                              checkboxInput("useRelativeDate",HTML("Plot using relative dates"),value=F),
-                              conditionalPanel(condition="input.useRelativeDate",
-                                               h5("Relative date condition:"),
-                                               selectInput("myThresholdType",label=NULL,"",multiple=F),
-                                               selectInput("myThresholdTypeAbsRel",label=NULL,"",multiple=F),
-                                               numericInput("myThresholdValue",label=NULL,100,min=1),
-                                               sliderInput("myRelativeDatesXLims",label="Relative date axis limits:",min=-28,max=56,value=c(-7,42))
-                              ), #conditionalPanel
-                            ), #sidebarPanel
-                            mainPanel(
-                              plotOutput("coronaPlot"),
-                              p(),
-                              actionLink("link_to_tabpanel_downloads", "You can download your plot (and the underlying data) from the 'downloads' tab.")
-                            ) #mainPanel
-                          ) #sidebarLayout
-                 ), #tabpanel
-                 tabPanel("Maps",
-                          sidebarLayout(
-                            sidebarPanel(
-                              selectInput("myMapVariables","Variable(s)","",multiple=F),
-                              selectInput("myMapDataType","Data type","",multiple=F),
-                              sliderInput("myMapDate",label="Date",min=min(cases$date),max=max(cases$date),value=max(cases$date),animate=T),
-                            ), #sidebarPanel
-                            mainPanel(
-                              h4("Experimental maps; not yet documented; not yet fully functional"),
-                              leafletOutput("myMap")
-                            ) #mainPanel
-                          ) #sidebarLayout
-                 ), #tabPanel
-                 tabPanel("Downloads",
-                          fluidRow(
-                            column(4,
-                                   h4("Download as PNG"),
-                                   numericInput("myPNGwidth","Width (px)",2400,min=1),
-                                   numericInput("myPNGheight","Height (px)",1350,min=1),
-                                   numericInput("myPNGres","Resolution (ppi)",300,min=100),
-                                   downloadButton("downloadPNGplot", "PNG download")
-                            ),
-                            column(4,
-                                   h4("Download as PDF"),
-                                   numericInput("myPDFwidth","Width (i)",8,min=1),
-                                   numericInput("myPDFheight","Height (i)",4.5,min=1),
-                                   downloadButton("downloadPDFplot", "PDF download")
-                            ),
-                            column(4,
-                                   h4("Download data as CSV"),
-                                   selectInput("data2download","Choose a dataset:",choices = c("All data","Plot data","Population data")),
-                                   downloadButton("downloadCSV","CSV download")
-                            )) #column, fluidRow
-                 ), #tabPanel
-                          
-                 tabPanel("About", fluidRow( column(12, includeMarkdown("about.md")) ) )
-)) #tabsetPanel   #navbarPage 
+                             tabPanel("Timeseries plots",
+                                      tags$head(includeHTML(("google-analytics.html"))),
+                                      sidebarLayout(
+                                        sidebarPanel(
+                                          selectInput("myCountries","Country/Countries","",multiple=T),
+                                          selectInput("myVariables","Variable(s)","",multiple=T),
+                                          selectInput("myDataType","Data type","",multiple=F),
+                                          selectInput("myVerticalScale","Vertical scale","",multiple=F),
+                                          h3("Relative numbers"),
+                                          checkboxInput("useRelativeData","Plot data relative to population size",value=F),
+                                          h3("Relative dates"),
+                                          checkboxInput("useRelativeDate",HTML("Plot using relative dates"),value=F),
+                                          conditionalPanel(condition="input.useRelativeDate",
+                                                           h5("Relative date condition:"),
+                                                           selectInput("myThresholdType",label=NULL,"",multiple=F),
+                                                           selectInput("myThresholdTypeAbsRel",label=NULL,"",multiple=F),
+                                                           numericInput("myThresholdValue",label=NULL,100,min=1),
+                                                           sliderInput("myRelativeDatesXLims",label="Relative date axis limits:",min=-28,max=56,value=c(-7,42))
+                                          ), #conditionalPanel
+                                        ), #sidebarPanel
+                                        mainPanel(
+                                          plotOutput("coronaPlot"),
+                                          p(),
+                                          actionLink("link_to_tabpanel_downloads", "You can download your plot (and the underlying data) from the 'downloads' tab.")
+                                        ) #mainPanel
+                                      ) #sidebarLayout
+                             ), #tabpanel
+                             tabPanel("Maps",
+                                      sidebarLayout(
+                                        sidebarPanel(
+                                          selectInput("myMapVariables","Variable(s)","",multiple=F),
+                                          selectInput("myMapDataType","Data type","",multiple=F),
+                                          sliderInput("myMapDate",label="Date",min=min(cases$date),max=max(cases$date),value=max(cases$date),animate=T),
+                                        ), #sidebarPanel
+                                        mainPanel(
+                                          h4("Experimental maps; not yet documented; not yet fully functional"),
+                                          leafletOutput("myMap")
+                                        ) #mainPanel
+                                      ) #sidebarLayout
+                             ), #tabPanel
+                             tabPanel("Downloads",
+                                      fluidPage(
+                                        fluidRow(
+                                          h4("Download timeseries plot"),
+                                          checkboxInput("changeTimeseriesPlotDownloadSettings",HTML("Change timeseries plot download settings"),value=F),
+                                          conditionalPanel(condition="input.changeTimeseriesPlotDownloadSettings",
+                                                           column(2,
+                                                                  h5("PNG download settings"),
+                                                                  numericInput("myPNGwidth","Width (px)",2400,min=1,width=150),
+                                                                  numericInput("myPNGheight","Height (px)",1350,min=1,width=150),
+                                                                  numericInput("myPNGres","Resolution (ppi)",300,min=100,width=150),
+                                                           ),
+                                                           column(2,
+                                                                  h5("PDF download settings"),
+                                                                  numericInput("myPDFwidth","Width (i)",8,min=1,width=150),
+                                                                  numericInput("myPDFheight","Height (i)",4.5,min=1,width=150),
+                                                           )
+                                          ), #conditionalPanel
+                                        ), #fluidRow
+                                        fluidRow(
+                                          downloadButton("downloadPNGplot", "PNG plot download"),
+                                          downloadButton("downloadPDFplot", "PDF plot download"),
+                                          p(),
+                                        ), #fluidRow
+                                        fluidRow(
+                                          h4("Download maps"),
+                                          p("Note that map downloads take a few seconds to render"),
+                                          downloadButton("downloadPNGmap", "PNG map download"),
+                                          downloadButton("downloadPDFmap", "PDF map download"),
+                                          p(),
+                                        ), #fluidRow
+                                        fluidRow(
+                                          h4("Download data"),
+                                          selectInput("data2download","Choose a dataset:",choices = c("All data","Data from current plot","Population data")),
+                                          downloadButton("downloadCSV","CSV download")
+                                        ) #fluidRow
+                                      ) #fluidPage
+                             ), #tabPanel
+                             
+                             tabPanel("About", fluidRow( column(12, includeMarkdown("about.md")) ) )
+                 )) #tabsetPanel   #navbarPage 
 
 # Server logic
 server <- function(input, output, session) {
@@ -217,22 +235,29 @@ server <- function(input, output, session) {
     print(createCoronaPlot())
   })
   
-  output$myMap <- renderLeaflet({
-    myCases <- subset(cases, variable==input$myMapVariables & datatype==input$myMapDataType & date==input$myMapDate)
-    #print(input$myMap_bounds)
-    leaflet(myCases) %>%  addTiles() %>%
-      addPolygons(layerId = myCases$value,smoothFactor=0.5,weight=0.01,color="grey",
+  createMyMapCases <- function(){
+    myMapCases <- subset(cases, variable==input$myMapVariables & datatype==input$myMapDataType & date==input$myMapDate)
+  }
+  
+  createMyLeafletMap <- function(){
+    myMapCases <- createMyMapCases()
+    leaflet(myMapCases) %>%  addTiles() %>%
+      addPolygons(layerId = myMapCases$value,smoothFactor=0.5,weight=0.01,color="grey",
                   fillOpacity=0.8,fillColor = ~colorQuantile("Blues", unique(value),n=9)(value),
-                  label=paste(myCases$country,paste0("(",myCases$ISO3,")"),"\n",
-                              paste0(myCases$variable," (",myCases$datatype,"):"),scales::comma(myCases$value,accuracy = 1),
-                              "on",myCases$date),
+                  label=paste(myMapCases$country,paste0("(",myMapCases$ISO3,")"),"\n",
+                              paste0(myMapCases$variable," (",myMapCases$datatype,"):"),scales::comma(myMapCases$value,accuracy = 1),
+                              "on",myMapCases$date),
                   highlightOptions = highlightOptions(color = "white", weight = 2,bringToFront = TRUE))
+  }
+  
+  output$myMap <- renderLeaflet({
+    createMyLeafletMap()
   })
   
   datasetInput <- reactive({
     myCases <- createSubset()
     myCases <- subset(myCases, select = -c(rel_value))
-    switch(input$data2download,"All data" = cases,"Plot data" = myCases,"Population data" = wbpop18)
+    switch(input$data2download,"All data" = cases,"Data from current plot" = myCases,"Population data" = wbpop18)
   })
   
   output$downloadPNGplot <- downloadHandler(
@@ -244,6 +269,8 @@ server <- function(input, output, session) {
     }
   )
   
+  
+  
   output$downloadPDFplot <- downloadHandler(
     filename=function() {paste(Sys.Date(),"-covid19-plotted-by-janverkade.pdf",sep="")},
     content=function(filename) {
@@ -252,6 +279,21 @@ server <- function(input, output, session) {
       dev.off()
     }
   )
+  
+  output$downloadPNGmap <- downloadHandler(
+    filename=function() {paste(Sys.Date(),"-covid19map-plotted-by-janverkade.png",sep="")},
+    content=function(filename) {
+      mapshot(createMyLeafletMap(),file=filename)
+    }
+  )
+  
+  output$downloadPDFmap <- downloadHandler(
+    filename=function() {paste(Sys.Date(),"-covid19map-plotted-by-janverkade.pdf",sep="")},
+    content=function(filename) {
+      mapshot(createMyLeafletMap(),file=filename)
+    }
+  )
+  
   
   output$downloadCSV <- downloadHandler(
     filename = function() { 'covid19-data-compiled-by-janverkade.csv' },

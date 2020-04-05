@@ -5,8 +5,8 @@ account: janverkade
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1975382
-bundleId: 2971290
+bundleId: 2971550
 url: https://janverkade.shinyapps.io/COVID19_world/
-when: 1586086220.59647
+when: 1586093496.99245
 asMultiple: FALSE
 asStatic: FALSE
