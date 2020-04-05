@@ -10,6 +10,7 @@ library(dplyr)
 library(lubridate)
 library(markdown)
 library(scales)
+library(sf)
 library(leaflet)
 
 ##### Read file from Dropbox
@@ -21,10 +22,11 @@ cases <- readRDS(tmp)
 unlink(tmp)
 
 wbpop18 <- readRDS("wb_pop18.rds")
+worldmap <- st_read("TM_WORLD_BORDERS_SIMPL-0.3.shp",stringsAsFactors = FALSE, quiet = TRUE) %>% select(ISO3)
+cases <- left_join(cases, worldmap) %>%  st_as_sf() 
 
 myTitle <- "Reported COVID19 cases, deaths and recoveries"
 
-# Define UI for application that draws a histogram
 ui <- navbarPage("covid19 visualization tool, by Jan Verkade",
                  tabPanel("Timeseries plots",
                           tags$head(includeHTML(("google-analytics.html"))),
@@ -66,9 +68,19 @@ ui <- navbarPage("covid19 visualization tool, by Jan Verkade",
                             ) #mainPanel
                           ) #sidebarLayout
                  ), #tabpanel
-                 # tabPanel("Maps",
-                 #          leafletOutput("myMap")
-                 #          ), #tabPanel
+                 tabPanel("Maps",
+                          sidebarLayout(
+                            sidebarPanel(
+                              selectInput("myMapVariables","Variable(s)","",multiple=F),
+                              selectInput("myMapDataType","Data type","",multiple=F),
+                              sliderInput("myMapDate",label="Date",min=min(cases$date),max=max(cases$date),value=max(cases$date),animate=T),
+                            ), #sidebarPanel
+                            mainPanel(
+                              h4("Experimental maps; not yet documented; not yet fully functional"),
+                              leafletOutput("myMap")
+                            ) #mainPanel
+                          ) #sidebarLayout
+                 ), #tabPanel
                  tabPanel("About", fluidRow( column(12, includeMarkdown("about.md")) ) )
 ) #navbarPage #shinyUI
 
@@ -99,6 +111,13 @@ server <- function(input, output, session) {
     myThresholdTypeAbsRel <- list("Absolute"="abs","Relative to the population size (fraction!)"="rel")
     updateSelectInput(session=session,inputId="myThresholdTypeAbsRel",label=NULL,
                       choices=myThresholdTypeAbsRel,selected=myThresholdTypeAbsRel[1])
+    
+    updateSelectInput(session=session,inputId="myMapVariables",
+                      choices=unique(cases$variable),selected=unique(cases$variable)[1])
+    
+    updateSelectInput(session=session,inputId="myMapDataType",label="Data type",
+                      choices=myDataTypeChoices,selected=myDataTypeChoices[1])
+    
   })
   
   observeEvent(input$myThresholdTypeAbsRel,{
@@ -113,7 +132,7 @@ server <- function(input, output, session) {
   
   createSubset <- function(){
     myCases <- subset(cases, country %in% input$myCountries)
-    myCases <- merge(x=myCases,y=wbpop18,by.x="code",by.y="code")
+    myCases <- merge(x=myCases,y=wbpop18)
     if(input$myThresholdTypeAbsRel=="rel") {
       myCases$rel_value <- myCases$value/myCases$pop18
       myCases <- myCases %>% group_by(country,variable) %>% mutate(t0 = min(date[datatype == "cum" & variable==input$myThresholdType & rel_value >= input$myThresholdValue]))
@@ -184,7 +203,15 @@ server <- function(input, output, session) {
   })
   
   output$myMap <- renderLeaflet({
-    leaflet() %>% addTiles() %>%  addMarkers(lng=174.768, lat=-36.852, popup="The birthplace of R")
+    myCases <- subset(cases, variable==input$myMapVariables & datatype==input$myMapDataType & date==input$myMapDate)
+    #print(input$myMap_bounds)
+    leaflet(myCases) %>%  addTiles() %>%
+      addPolygons(layerId = myCases$value,smoothFactor=0.5,weight=0.01,color="grey",
+                  fillOpacity=0.8,fillColor = ~colorQuantile("Blues", unique(value),n=9)(value),
+                  label=paste(myCases$country,paste0("(",myCases$ISO3,")"),"\n",
+                              paste0(myCases$variable," (",myCases$datatype,"):"),scales::comma(myCases$value,accuracy = 1),
+                              "on",myCases$date),
+                  highlightOptions = highlightOptions(color = "white", weight = 2,bringToFront = TRUE))
   })
   
   datasetInput <- reactive({
