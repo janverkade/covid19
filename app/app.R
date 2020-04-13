@@ -25,7 +25,7 @@ unlink(tmp)
 
 wbpop18 <- readRDS("wb_pop18.rds")
 worldmap <- st_read("TM_WORLD_BORDERS_SIMPL-0.3.shp",stringsAsFactors = FALSE, quiet = TRUE) %>% select(ISO3)
-cases <- left_join(cases, worldmap) %>%  st_as_sf() 
+mapCases <- left_join(cases, worldmap) %>%  st_as_sf() 
 
 myTitle <- "Reported COVID19 cases, deaths and recoveries"
 
@@ -74,7 +74,7 @@ ui <- navbarPage("covid19 visualization tool, by Jan Verkade",
                              tabPanel("Downloads",
                                       fluidPage(
                                         fluidRow(
-                                          h4("Download timeseries plot"),
+                                          h4("Download current timeseries plot"),
                                           checkboxInput("changeTimeseriesPlotDownloadSettings",HTML("Change timeseries plot download settings"),value=F),
                                           conditionalPanel(condition="input.changeTimeseriesPlotDownloadSettings",
                                                            column(2,
@@ -96,7 +96,7 @@ ui <- navbarPage("covid19 visualization tool, by Jan Verkade",
                                           p(),
                                         ), #fluidRow
                                         fluidRow(
-                                          h4("Download maps"),
+                                          h4("Download current map"),
                                           p("Note that map downloads take a few seconds to render"),
                                           downloadButton("downloadPNGmap", "PNG map download"),
                                           downloadButton("downloadPDFmap", "PDF map download"),
@@ -183,7 +183,6 @@ server <- function(input, output, session) {
   }
   
   createCoronaPlot <- function(){
-    
     myCases <- createSubset()
     myCaption <- "Plotted by @janverkade based on data from Johns Hopkins University (https://systems.jhu.edu/research/public-health/ncov/)."
     
@@ -219,6 +218,7 @@ server <- function(input, output, session) {
       m6 <- NULL
     }
     
+    if (!exists(input$myVerticalScale)) { input$myVerticalScale <- "identity"}
     m1 + m5 + m6 + m2 + m3  +
       scale_y_continuous(trans=input$myVerticalScale,labels = myLabels) +
       xlab(NULL) + ylab(myYLab) +
@@ -236,7 +236,7 @@ server <- function(input, output, session) {
   })
   
   createMyMapCases <- function(){
-    myMapCases <- subset(cases, variable==input$myMapVariables & datatype==input$myMapDataType & date==input$myMapDate)
+    myMapCases <- subset(mapCases, variable==input$myMapVariables & datatype==input$myMapDataType & date==input$myMapDate)
   }
   
   createMyLeafletMap <- function(){
@@ -301,9 +301,8 @@ server <- function(input, output, session) {
       write.csv(datasetInput(),file,row.names=F,quote=F)
     }
   )
-  
-  
-}
+
+} #server
 
 # Run the application 
 shinyApp(ui = ui, server = server)
