@@ -56,10 +56,10 @@ cases <- aggregate(cases$value,by=list(cases$country,cases$date,cases$variable),
 names(cases) <- c("country","date","variable","value")
 
 ## Match countries with their ISO3 code
-cases <- merge(x=cases,y=iso_countries,by.x="country",by.y="ISO_country"); cases$JHU_country <- NULL
+cases <- merge(x=cases,y=iso_countries,by.x="country",by.y="ISO_country",no.dups=T); cases$JHU_country <- NULL
 
 ## From cumulative data, compute daily numbers
-cases <- arrange(cases, country, variable, date)
+cases <- arrange(unique(cases), country, variable, date)
 names(cases)[names(cases)=='value'] <- 'cum'
 cases <- cases %>% group_by(country,variable) %>% mutate(daily = cum -lag(cum))
 cases <- reshape2::melt(cases,id.vars=c("country","date","variable","ISO3"),variable.name="datatype")
