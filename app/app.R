@@ -48,7 +48,7 @@ ui <- navbarPage("covid19 visualization tool, by Jan Verkade",
                                                            selectInput("myThresholdType",label=NULL,"",multiple=F),
                                                            selectInput("myThresholdTypeAbsRel",label=NULL,"",multiple=F),
                                                            numericInput("myThresholdValue",label=NULL,100,min=1),
-                                                           sliderInput("myRelativeDatesXLims",label="Relative date axis limits:",min=-28,max=56,value=c(-7,42))
+                                                           sliderInput("myRelativeDatesXLims",label="Relative date axis limits:",min=-120,max=120,value=c(-15,90))
                                           ), #conditionalPanel
                                         ), #sidebarPanel
                                         mainPanel(
