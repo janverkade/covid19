@@ -18,7 +18,7 @@ tmp_list <- list()
 for (i in seq_along(myFiles)) {
   tmp_list[[i]] <- read.csv(file.path(jhu_csv_folder,myFiles[i]),as.is=T)
   
-  cols2remove <- c("Lat","Long_","Lon","Long","Latitude","Longitude","FIPS","Admin2","Last.Update","Last_Update","Combined_Key")
+  cols2remove <- c("Lat","Long_","Lon","Long","Latitude","Longitude","FIPS","Admin2","Last.Update","Last_Update","Combined_Key","Incidence_Rate","Case.Fatality_Ratio")
   n <- which(names(tmp_list[[i]]) %in% cols2remove); if (length(n)>0) { tmp_list[[i]][,n] <- NULL  }
   n <- which(names(tmp_list[[i]]) %in% c("Province_State","Province.State")); if (length(n)>0) {names(tmp_list[[i]])[n] <- "area"  }
   n <- which(names(tmp_list[[i]]) %in% c("Country_Region","Country.Region")); if (length(n)>0) {names(tmp_list[[i]])[n] <- "country"  }
