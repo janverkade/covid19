@@ -161,7 +161,8 @@ server <- function(input, output, session) {
     }
   })
   
-  myDateLabel <-function(x) { paste(substr(format(x, "%a"),1,3),format(x, "%b %d"),sep="\n") }
+  #myDateLabel <-function(x) { paste(substr(format(x, "%a"),1,3),format(x, "%b %d"),sep="\n") }
+  myDateLabel <-function(x) { paste(format(x, "%b %d"),format(x, "%Y"),sep="\n") }
   
   createSubset <- function(){
     myCases <- subset(cases, country %in% input$myCountries)
@@ -190,7 +191,7 @@ server <- function(input, output, session) {
       m2 <- geom_point(size=3,alpha=.8)
       m3 <- geom_line()
     } else {
-      m2 <- geom_col(position="dodge")
+      m2 <- geom_col(position="dodge",alpha=0.4)
       m3 <- NULL
     }
     
@@ -212,8 +213,8 @@ server <- function(input, output, session) {
       m5 <- if(input$useRelativeData & input$myThresholdTypeAbsRel=="abs") {NULL} else {geom_hline(yintercept=input$myThresholdValue,color="grey")}
       m6 <- geom_vline(xintercept=0,color="grey")
     } else {
-      m1 <- ggplot(subset(myCases,variable %in% input$myVariables),aes(x=date,y=rel_value,col=country,shape=variable,linetype=variable,group=interaction(country,variable,datatype)))
-      m4 <- scale_x_date(date_breaks = "1 week",labels=myDateLabel,minor_breaks=NULL)
+      m1 <- ggplot(subset(myCases,variable %in% input$myVariables),aes(x=date,y=rel_value,col=country,fill=country,shape=variable,linetype=variable,group=interaction(country,variable,datatype)))
+      m4 <- scale_x_date(date_breaks = "1 month",labels=myDateLabel,minor_breaks=NULL)
       m5 <- NULL
       m6 <- NULL
     }

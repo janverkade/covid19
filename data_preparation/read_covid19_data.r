@@ -71,4 +71,6 @@ cases <- reshape2::melt(cases,id.vars=c("country","date","variable","ISO3"),vari
 
 ##### Save the data
 #write.table(cases,file=file.path(covid19_home,"covid19_data.csv"),quote=F,row.names = F,sep=";")
+cases00 <- readRDS(file=file.path(RDS_file_location,"covid19_data00.rds"))
+cases <- rbind(cases,cases00)
 saveRDS(cases,file=file.path(RDS_file_location,"covid19_data.rds"))
