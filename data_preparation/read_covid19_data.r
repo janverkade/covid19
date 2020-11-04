@@ -42,6 +42,7 @@ iso_countries <- read.csv(file.path(covid19_home,"data_preparation","input","iso
 
 ## Identify countries that are not listed (in the iso3_countrynames.csv file) as 'official' country names
 ## Subsequently, loop over country names that weren't found. Match unofficial country name (JHU_country) with 'official' name (ISO_country)
+i <- which(cases$country == ""); cases <- cases[-i,]
 i <- which(!cases$country %in% iso_countries$ISO_country)
 for ( r in unique(cases$country[i]) ) {
   j <- which(cases$country == r)
