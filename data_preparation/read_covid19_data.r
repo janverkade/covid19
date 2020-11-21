@@ -23,7 +23,7 @@ tmp_list <- list()
 for (i in seq_along(myFiles)) {
   tmp_list[[i]] <- read.csv(file.path(jhu_csv_folder,myFiles[i]),as.is=T)
   
-  cols2remove <- c("Lat","Long_","Lon","Long","Latitude","Longitude","FIPS","Admin2","Last.Update","Last_Update","Combined_Key","Incidence_Rate","Case.Fatality_Ratio")
+  cols2remove <- c("Lat","Long_","Lon","Long","Latitude","Longitude","FIPS","Admin2","Last.Update","Last_Update","Combined_Key","Incidence_Rate","Incident_Rate","Case.Fatality_Ratio","Case_Fatality_Ratio")
   n <- which(names(tmp_list[[i]]) %in% cols2remove); if (length(n)>0) { tmp_list[[i]][,n] <- NULL  }
   n <- which(names(tmp_list[[i]]) %in% c("Province_State","Province.State")); if (length(n)>0) {names(tmp_list[[i]])[n] <- "area"  }
   n <- which(names(tmp_list[[i]]) %in% c("Country_Region","Country.Region")); if (length(n)>0) {names(tmp_list[[i]])[n] <- "country"  }
@@ -42,7 +42,7 @@ iso_countries <- read.csv(file.path(covid19_home,"data_preparation","input","iso
 
 ## Identify countries that are not listed (in the iso3_countrynames.csv file) as 'official' country names
 ## Subsequently, loop over country names that weren't found. Match unofficial country name (JHU_country) with 'official' name (ISO_country)
-i <- which(cases$country == ""); cases <- cases[-i,]
+i <- which(cases$country == ""); if(length(i) > 0) {cases <- cases[-i,]}
 i <- which(!cases$country %in% iso_countries$ISO_country)
 for ( r in unique(cases$country[i]) ) {
   j <- which(cases$country == r)
@@ -74,4 +74,4 @@ cases <- reshape2::melt(cases,id.vars=c("country","date","variable","ISO3"),vari
 #write.table(cases,file=file.path(covid19_home,"covid19_data.csv"),quote=F,row.names = F,sep=";")
 cases00 <- readRDS(file=file.path(RDS_file_location,"covid19_data00.rds"))
 cases <- rbind(cases,cases00)
-saveRDS(cases,file=file.path(RDS_file_location,"covid19_data.rds"))
+saveRDS(cases,file=file.path(RDS_file_location,"covid19_data.rds"),version=2)

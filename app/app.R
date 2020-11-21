@@ -16,7 +16,7 @@ library(shinyBS)
 library(mapview)
 
 ##### Read file from Dropbox
-url <- "https://dl.dropboxusercontent.com/s/lpi98yc1tupj9fg/covid19_data.rds?dl=1"
+url <- "https://dl.dropboxusercontent.com/s/6q2vfc0d52wt72k/covid19_data.rds?dl=1"
 remoteBinFile <- getBinaryURL(url = url)
 tmp = tempfile()
 writeBin(object=remoteBinFile, con = tmp)
