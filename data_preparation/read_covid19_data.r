@@ -13,11 +13,12 @@ source("~/covid19_config.r")
 
 
 ##### Read cases from files provided by JHU
+myFiles <- list.files(path=jhu_csv_folder,pattern=".csv",full.names = F)
 
 ## First 10 months of 2020 are pre-prepared. Only read what's more recent than that.
-mm <- sprintf("%02.0f",1:10)
-myFiles <- list.files(path=jhu_csv_folder,pattern=".csv",full.names = F)
-i <- which(substr(myFiles,1,2) %in% mm); myFiles <- myFiles[-i] # Note the MINUS-i
+myFiles_date <- mdy(sub(".csv","",myFiles))
+i <- which(myFiles_date > ymd("20201031"))
+myFiles <- myFiles[i]
 
 tmp_list <- list()
 for (i in seq_along(myFiles)) {
