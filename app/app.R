@@ -14,14 +14,18 @@ library(sf)
 library(leaflet)
 library(shinyBS)
 library(mapview)
+library(rdrop2)
 
 ##### Read file from Dropbox
-url <- "https://dl.dropboxusercontent.com/s/6q2vfc0d52wt72k/covid19_data.rds?dl=1"
-remoteBinFile <- getBinaryURL(url = url)
-tmp = tempfile()
-writeBin(object=remoteBinFile, con = tmp)
-cases <- readRDS(tmp)
-unlink(tmp)
+drop_auth(rdstoken = "droptoken.rds")
+drop_download("/prive/covid19/covid19_data.rds",overwrite=T)
+cases <- readRDS("covid19_data.rds")
+#url <- "https://dl.dropboxusercontent.com/s/6q2vfc0d52wt72k/covid19_data.rds?dl=1"
+#remoteBinFile <- getBinaryURL(url = url)
+#tmp = tempfile()
+#writeBin(object=remoteBinFile, con = tmp)
+#cases <- readRDS(tmp)
+#unlink(tmp)
 
 wbpop18 <- readRDS("wb_pop18.rds")
 worldmap <- st_read("TM_WORLD_BORDERS_SIMPL-0.3.shp",stringsAsFactors = FALSE, quiet = TRUE) %>% select(ISO3)

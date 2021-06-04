@@ -13,6 +13,10 @@ rm(list=objects())
 source("~/covid19_config.r")
 
 
+# Authorize Dropbox ####
+drop_auth(rdstoken = "droptoken.rds")
+
+
 ##### Read cases from files provided by JHU
 myFiles <- list.files(path=jhu_csv_folder,pattern=".csv",full.names = F)
 
