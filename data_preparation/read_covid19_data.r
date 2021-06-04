@@ -8,6 +8,7 @@
 library(lubridate)
 library(reshape2)
 library(dplyr)
+library(rdrop2)
 rm(list=objects())
 source("~/covid19_config.r")
 
@@ -15,7 +16,7 @@ source("~/covid19_config.r")
 ##### Read cases from files provided by JHU
 myFiles <- list.files(path=jhu_csv_folder,pattern=".csv",full.names = F)
 
-## First 10 months of 2020 are pre-prepared. Only read what's more recent than that.
+## Some data is pre-prepared. Only read what's more recent than that.
 myFiles_date <- mdy(sub(".csv","",myFiles))
 #i <- which(myFiles_date >= ymd("20210101") & myFiles_date < ymd("20210401"))
 i <- which(myFiles_date >= ymd("20210401"))
@@ -75,7 +76,11 @@ cases <- reshape2::melt(cases,id.vars=c("country","date","variable","ISO3"),vari
 ##### Save the data
 #write.table(cases,file=file.path(covid19_home,"covid19_data.csv"),quote=F,row.names = F,sep=";")
 #saveRDS(cases,file=file.path(RDS_file_location,"covid19_data_2021Q1.rds"))
-cases2020 <- readRDS(file=file.path(RDS_file_location,"covid19_data_2020.rds"))
-cases2021Q1 <- readRDS(file=file.path(RDS_file_location,"covid19_data_2021Q1.rds"))
+drop_download("/prive/covid19/covid19_data_2020.rds",overwrite=T)
+drop_download("/prive/covid19/covid19_data_2021Q1.rds", overwrite=T)
+cases2020 <- readRDS(file="covid19_data_2020.rds")
+cases2021Q1 <- readRDS(file="covid19_data_2021Q1.rds")
+
 cases <- rbind(cases,cases2020,cases2021Q1)
-saveRDS(cases,file=file.path(RDS_file_location,"covid19_data.rds"),version=2)
+saveRDS(cases,file="covid19_data.rds",version=2)
+drop_upload("covid19_data.rds",path="/prive/covid19",mode="overwrite")
