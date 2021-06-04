@@ -17,7 +17,8 @@ myFiles <- list.files(path=jhu_csv_folder,pattern=".csv",full.names = F)
 
 ## First 10 months of 2020 are pre-prepared. Only read what's more recent than that.
 myFiles_date <- mdy(sub(".csv","",myFiles))
-i <- which(myFiles_date > ymd("20201031"))
+#i <- which(myFiles_date >= ymd("20210101") & myFiles_date < ymd("20210401"))
+i <- which(myFiles_date >= ymd("20210401"))
 myFiles <- myFiles[i]
 
 tmp_list <- list()
@@ -73,6 +74,8 @@ cases <- reshape2::melt(cases,id.vars=c("country","date","variable","ISO3"),vari
 
 ##### Save the data
 #write.table(cases,file=file.path(covid19_home,"covid19_data.csv"),quote=F,row.names = F,sep=";")
-cases00 <- readRDS(file=file.path(RDS_file_location,"covid19_data00.rds"))
-cases <- rbind(cases,cases00)
+#saveRDS(cases,file=file.path(RDS_file_location,"covid19_data_2021Q1.rds"))
+cases2020 <- readRDS(file=file.path(RDS_file_location,"covid19_data_2020.rds"))
+cases2021Q1 <- readRDS(file=file.path(RDS_file_location,"covid19_data_2021Q1.rds"))
+cases <- rbind(cases,cases2020,cases2021Q1)
 saveRDS(cases,file=file.path(RDS_file_location,"covid19_data.rds"),version=2)
