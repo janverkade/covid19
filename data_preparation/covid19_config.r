@@ -9,5 +9,4 @@
 ## File contents should be modified to reflect current workstation's locations
 
 jhu_csv_folder <- "/home/jan/covid19_data/csse_covid_19_daily_reports/" #This is the folder  where JHU data is synchronized to
-RDS_file_location <- "/home/jan/Dropbox/prive/covid19/" #This is the folder where the app sources its data from
 covid19_home <- "/home/jan/covid19/" #This is the folder where the app and the preparation files live
