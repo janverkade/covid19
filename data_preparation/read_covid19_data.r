@@ -14,7 +14,7 @@ source("~/covid19_config.r")
 
 
 # Authorize Dropbox ####
-drop_auth(rdstoken = "droptoken.rds")
+drop_auth(rdstoken = file.path(covid19_home,"droptoken.rds"))
 
 
 ##### Read cases from files provided by JHU
